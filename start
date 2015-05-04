@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sleep 1
+host ${CONSUL_HOST} >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+	echo "Running consul-template\n"
+	/bin/consul-template \
+	-consul ${CONSUL_HOST}:8500 \
+	-template "/templates/kibana.yml.ctmpl:/opt/kibana/config/kibana.yml" \
+	-retry 30s \
+	-once
+fi
+
+exec "$@"
